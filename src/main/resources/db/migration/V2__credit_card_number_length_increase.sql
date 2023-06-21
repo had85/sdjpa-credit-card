@@ -1,0 +1,1 @@
+alter table credit_card modify credit_card_number varchar(24);
