@@ -8,7 +8,9 @@ import java.util.stream.Collectors;
 
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ReflectionUtils;
 
 import guru.springframework.creditcard.services.EncriptionService;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +54,23 @@ public class EncryptionInterceptor extends EmptyInterceptor {
 			}
 		}
 		return super.onLoad(entity, id, state, propertyNames, types);
+	}
+	//iterira kroz polja entity-ja i proverava da li je polje anotirano, ako jeste odradjuje izmenu vrednosti polja
+	public void onLoad(Object entity) {
+		
+		log.info("On onLoad...");
+
+		ReflectionUtils.doWithFields(entity.getClass(),
+			field -> {
+				field.setAccessible(true);
+				val fieldToDecrypt = ReflectionUtils.getField(field, entity);
+				ReflectionUtils.setField(field, entity, encriptionService.decrypt(fieldToDecrypt.toString()));
+				
+			}, 
+			field ->{
+				return AnnotationUtils.findAnnotation(field, EncryptedString.class) != null;
+			});
+		
 	}
 
 	@Override //pre nego sto perzistiramo

@@ -17,7 +17,7 @@ public class HibernateInterceptorConfiguration implements HibernatePropertiesCus
 	@Override
 	public void customize(Map<String, Object> hibernateProperties) {
 
-		hibernateProperties.put("hibernate.session_factory.interceptor", encryptionInterceptor);
+		//hibernateProperties.put("hibernate.session_factory.interceptor", encryptionInterceptor);
 	}
 
 }

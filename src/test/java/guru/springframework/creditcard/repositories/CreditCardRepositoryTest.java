@@ -50,6 +50,10 @@ class CreditCardRepositoryTest {
     	assertThat(creditCard.getId()).isNotNull();
     	
     	assertThat(dbRow.get("credit_card_number")).isEqualTo(encryptedCreditCardNumber);
+    	
+    	val foundCreditCard = creditCardRepository.findById(creditCard.getId()).orElse(null);
+    	
+    	assertThat(foundCreditCard.getCreditCardNumber()).isEqualTo(CREDIT_CARD_NUMBER);
     }
 
 
